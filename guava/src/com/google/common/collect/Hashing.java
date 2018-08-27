@@ -72,4 +72,21 @@ final class Hashing {
   static boolean needsResizing(int size, int tableSize, double loadFactor) {
     return size > loadFactor * tableSize && tableSize < MAX_TABLE_SIZE;
   }
+
+
+  /**
+   * Generate a hash for an long value.
+   *
+   * @param value to be hashed.
+   * @return the hashed value.
+   */
+  public static int hash(final long value)
+  {
+    long hash = value * 31;
+    hash = (int)hash ^ (int)(hash >>> 32);
+
+    return (int)hash;
+  }
+
+
 }

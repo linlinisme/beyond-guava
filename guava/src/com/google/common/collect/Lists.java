@@ -84,6 +84,15 @@ public final class Lists {
     return new ArrayList<>();
   }
 
+
+  /**
+   * Creates a <i>mutable</i>, empty {@code IntArrayList} instance
+   */
+  @GwtCompatible(serializable = true)
+  public static IntArrayList newIntArrayList() {
+    return new IntArrayList();
+  }
+
   /**
    * Creates a <i>mutable</i> {@code ArrayList} instance containing the given elements.
    *
