@@ -38,6 +38,12 @@ final class Hashing {
   private static final long C1 = 0xcc9e2d51;
   private static final long C2 = 0x1b873593;
 
+  /**
+   * Default load factor to be used in open addressing hashed data structures.
+   */
+  public static final float DEFAULT_LOAD_FACTOR = 0.75f;
+
+
   /*
    * This method was rewritten in Java from an intermediate step of the Murmur hash function in
    * http://code.google.com/p/smhasher/source/browse/trunk/MurmurHash3.cpp, which contained the
@@ -87,6 +93,21 @@ final class Hashing {
 
     return (int)hash;
   }
+
+  /**
+   * Generate a hash for a int value.
+   *
+   * @param value to be hashed.
+   * @param mask  mask to be applied that must be a power of 2 - 1.
+   * @return the hash of the value.
+   */
+  public static int hash(final int value, final int mask)
+  {
+    final int hash = value * 31;
+
+    return hash & mask;
+  }
+
 
 
 }
