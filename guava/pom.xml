@@ -7,9 +7,10 @@
     <artifactId>guava-parent</artifactId>
     <version>HEAD-jre-SNAPSHOT</version>
   </parent>
-  <artifactId>guava</artifactId>
+  <artifactId>beyond-guava</artifactId>
   <packaging>bundle</packaging>
   <name>Guava: Google Core Libraries for Java</name>
+  <version>1.0.0</version>
   <description>
     Guava is a suite of core and expanded libraries that include
     utility classes, google's collections, io classes, and much
