@@ -54,7 +54,7 @@ public final class PrimitiveCollectors {
     }
 
     public static <T, Integer,M extends Map<Integer, Integer>>
-    Collector toInt2IntHashMap(Function<? super T, ? extends Integer> keyMapper,
+    Collector<Integer,?,Int2IntHashMap> toInt2IntHashMap(Function<? super T, ? extends Integer> keyMapper,
                              Function<? super T, ? extends Integer> valueMapper) {
         BiConsumer<M, T> accumulator
                 = (map, element) -> map.merge(keyMapper.apply(element),
