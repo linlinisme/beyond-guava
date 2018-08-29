@@ -1,10 +1,12 @@
 package com.google.common.collector;
 
+import com.google.common.collect.Int2IntHashMap;
 import com.google.common.collect.IntArrayList;
 import com.google.common.collect.IntHashSet;
 
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
@@ -45,10 +47,47 @@ public final class PrimitiveCollectors {
 
     public static
     Collector<Integer, ?, IntHashSet> toIntHashSet() {
+
         return new CollectorImpl<>(IntHashSet::new, IntHashSet::add,
                 (left, right) -> { left.addAll(right); return left; },
                 CH_ID);
     }
+
+    public static <T, Integer,M extends Map<Integer, Integer>>
+    Collector toInt2IntHashMap(Function<? super T, ? extends Integer> keyMapper,
+                             Function<? super T, ? extends Integer> valueMapper) {
+        BiConsumer<M, T> accumulator
+                = (map, element) -> map.merge(keyMapper.apply(element),
+                valueMapper.apply(element), throwingMerger());
+        return new CollectorImpl(Int2IntHashMap::new, accumulator, mapMerger(throwingMerger()), CH_ID);
+    }
+
+
+    public static <T, K, U, M extends Map<K, U>>
+    Collector<T, ?, M> toMap(Function<? super T, ? extends K> keyMapper,
+                             Function<? super T, ? extends U> valueMapper,
+                             BinaryOperator<U> mergeFunction,
+                             Supplier<M> mapSupplier) {
+        BiConsumer<M, T> accumulator
+                = (map, element) -> map.merge(keyMapper.apply(element),
+                valueMapper.apply(element), mergeFunction);
+        return new CollectorImpl(mapSupplier, accumulator, mapMerger(mergeFunction), CH_ID);
+    }
+
+    private static <K, V, M extends Map<K,V>>
+    BinaryOperator<M> mapMerger(BinaryOperator<V> mergeFunction) {
+        return (m1, m2) -> {
+            for (Map.Entry<K,V> e : m2.entrySet())
+                m1.merge(e.getKey(), e.getValue(), mergeFunction);
+            return m1;
+        };
+    }
+
+    private static <T> BinaryOperator<T> throwingMerger() {
+        return (u,v) -> { throw new IllegalStateException(String.format("Duplicate key %s", u)); };
+    }
+
+
 
 
 

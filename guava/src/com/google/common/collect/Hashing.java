@@ -110,4 +110,13 @@ final class Hashing {
 
 
 
+  public static int evenHash(final int value, final int mask)
+  {
+    final int hash = (value << 1) - (value << 8);
+
+    return hash & mask;
+  }
+
+
+
 }
