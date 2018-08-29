@@ -27,6 +27,9 @@ BeyondGuavaBenchmark.javaToMapBenchmark                  avgt    5  2069.030 ± 
 ##使用例子
 
 ```xml
+ //创建list
  IntArrayList intArrayList = new IntArrayList();
         for(int i = 0; i < 50000; i++) intArrayList.add(i); 
+ //lambda collect操作
+    IntStream.rangeClosed(0,5000).boxed().collect(PrimitiveCollectors.toIntArrayList());
 ```
