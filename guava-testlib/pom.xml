@@ -30,11 +30,18 @@
       <groupId>com.google.j2objc</groupId>
       <artifactId>j2objc-annotations</artifactId>
     </dependency>
-    <dependency>
+    <!--<dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>guava</artifactId>
       <version>${project.version}</version>
+    </dependency>-->
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>beyond-guava</artifactId>
+      <version>1.0.0</version>
     </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

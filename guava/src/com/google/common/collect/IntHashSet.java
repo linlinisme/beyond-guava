@@ -281,6 +281,9 @@ public class IntHashSet extends AbstractSet<Integer> implements Serializable
     }
 
     @SuppressWarnings("FinalParameters")
+    /**
+     * compactChain so that speed up the access
+     */
     void compactChain(int deleteIndex)
     {
         final int[] values = this.values;
