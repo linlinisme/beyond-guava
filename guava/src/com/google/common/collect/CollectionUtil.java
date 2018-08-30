@@ -17,6 +17,7 @@ package com.google.common.collect;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
@@ -131,5 +132,9 @@ public class CollectionUtil
         }
 
         return total;
+    }
+
+    public static void checkElementNotNull(Object element){
+        Objects.requireNonNull(element,"the element require not null!");
     }
 }

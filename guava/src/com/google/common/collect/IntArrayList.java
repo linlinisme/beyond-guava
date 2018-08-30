@@ -2,6 +2,10 @@
 package com.google.common.collect;
 
 
+
+
+import com.sun.istack.NotNull;
+
 import java.io.Serializable;
 import java.util.AbstractList;
 import java.util.Arrays;
@@ -12,14 +16,14 @@ import java.util.RandomAccess;
 import java.util.function.IntConsumer;
 import java.util.stream.IntStream;
 
+import static com.google.common.collect.CollectionUtil.checkElementNotNull;
+
 /**
  * A {@link List} implementation that stores int values with the ability to not have them boxed.
+ * it is not allow null element,because it is designed for high performance calculate and null meaningless
  */
 public class IntArrayList extends AbstractList<Integer> implements List<Integer>, RandomAccess, Serializable {
-    /**
-     * The default value that will be used in place of null for an element.
-     */
-    public static final int DEFAULT_NULL_VALUE = Integer.MIN_VALUE;
+
 
     /**
      * Initial capacity to which the array will be sized.
@@ -31,24 +35,20 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
      */
     public static final int MAX_CAPACITY = Integer.MAX_VALUE;
 
-    private final int nullValue;
     private int size = 0;
     private int[] elements;
 
     public IntArrayList() {
-        this(INITIAL_CAPACITY, DEFAULT_NULL_VALUE);
+        this(INITIAL_CAPACITY);
     }
 
     /**
      * Construct a new list.
      *
      * @param initialCapacity for the backing array.
-     * @param nullValue       to be used to represent a null element.
      */
-    public IntArrayList(
-            final int initialCapacity,
-            final int nullValue) {
-        this.nullValue = nullValue;
+    public IntArrayList(final int initialCapacity) {
+
         elements = new int[Math.max(initialCapacity, INITIAL_CAPACITY)];
     }
 
@@ -57,14 +57,11 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
      *
      * @param initialElements to be wrapped.
      * @param initialSize     of the array to wrap.
-     * @param nullValue       to be used to represent a null element.
      */
     public IntArrayList(
             final int[] initialElements,
-            final int initialSize,
-            final int nullValue) {
+            final int initialSize) {
         wrap(initialElements, initialSize);
-        this.nullValue = nullValue;
     }
 
     /**
@@ -94,21 +91,13 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
         size = initialSize;
     }
 
-    /**
-     * The value representing a null element.
-     *
-     * @return value representing a null element.
-     */
-    public int getNullValue() {
-        return nullValue;
-    }
 
     public int size() {
-        return size;
+        return this.size;
     }
 
     public void clear() {
-        size = 0;
+        this.size = 0;
     }
 
     /**
@@ -122,15 +111,29 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
 
     public Integer get(
             final int index) {
-        final int value = get(index);
+        return  getInt(index);
+    }
 
-        return value == nullValue ? null : value;
+    /**
+     * Get the element at a given index without boxing.
+     *
+     * @param index to get.
+     * @return the unboxed element.
+     */
+    public int getInt(
+             final int index)
+    {
+        checkIndex(index);
+
+        return elements[index];
     }
 
 
 
-    public boolean add(final Integer element) {
-        return add(null == element ? nullValue : element);
+
+    public boolean add(@NotNull final Integer element) {
+        checkElementNotNull(element);
+        return addInt(element);
     }
 
     /**
@@ -139,9 +142,9 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
      * @param element to be added.
      * @return true
      */
-    public boolean add(final int element) {
+    public boolean addInt(final int element)
+    {
         ensureCapacityPrivate(size + 1);
-
         elements[size] = element;
         size++;
 
@@ -150,8 +153,9 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
 
     public void add(
             final int index,
-            final Integer element) {
-        add(index, null == element ? nullValue : element);
+            @NotNull final Integer element) {
+        checkElementNotNull(element);
+        add(index, element);
     }
 
     /**
@@ -178,10 +182,9 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
 
     public Integer set(
             final int index,
-            final Integer element) {
-        final int previous = set(index, null == element ? nullValue : element);
-
-        return nullValue == previous ? null : previous;
+            @NotNull  final Integer element) {
+        checkElementNotNull(element);
+        return setInt(index, element);
     }
 
     /**
@@ -195,7 +198,6 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
             final int index,
             final int element) {
         checkIndex(index);
-
         final int previous = elements[index];
         elements[index] = element;
 
@@ -401,30 +403,29 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
         ensureCapacityPrivate(Math.max(requiredCapacity, INITIAL_CAPACITY));
     }
 
+    /**
+     * compare is the same array
+     * @param that
+     * @return
+     */
     public boolean equals(final IntArrayList that) {
+
         if (that == this) {
             return true;
         }
+        if (this.size() != that.size()) {
+            return false;
+        }
 
-        boolean isEqual = false;
-
-        if (this.size == that.size) {
-            isEqual = true;
-
-            for (int i = 0; i < size; i++) {
-                final int thisValue = this.elements[i];
-                final int thatValue = that.elements[i];
-
-                if (thisValue != thatValue) {
-                    if (thisValue != this.nullValue || thatValue != that.nullValue) {
-                        isEqual = false;
-                        break;
-                    }
-                }
+        for (int i = 0; i < this.size(); i++) {
+            if (this.getInt(i) != that.getInt(i)) {
+                return false;
             }
         }
 
-        return isEqual;
+        return true;
+
+
     }
 
     /**
@@ -472,8 +473,7 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
         int hashCode = 0;
         for (int i = 0; i < size; i++) {
             final int value = elements[i];
-
-            hashCode = 31 * hashCode + (value == nullValue ? 0 : Hashing.hash(value));
+            hashCode = 31 * hashCode +  Hashing.hash(value);
         }
 
         return hashCode;
@@ -488,10 +488,10 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
 
         for (int i = 0; i < size; i++) {
             final int value = elements[i];
-            if (value != nullValue) {
+
                 sb.append(value);
                 sb.append(", ");
-            }
+
         }
 
         if (sb.length() > 1) {
@@ -528,10 +528,31 @@ public class IntArrayList extends AbstractList<Integer> implements List<Integer>
         }
     }
 
-
-    public static void main(String[] args){
-        Lists.newIntArrayList();
+    /**
+     * Checks if the given index is in range.  If not, throws an appropriate
+     * runtime exception.  This method does *not* check if the index is
+     * negative: It is always used immediately prior to an array access,
+     * which throws an ArrayIndexOutOfBoundsException if index is negative.
+     */
+    private void rangeCheck(int index) {
+        if (index >= size)
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
     }
+
+    /**
+     * Constructs an IndexOutOfBoundsException detail message.
+     * Of the many possible refactorings of the error handling code,
+     * this "outlining" performs best with both server and client VMs.
+     */
+    private String outOfBoundsMsg(int index) {
+        return "Index: "+index+", Size: "+size;
+    }
+
+
+
+
+
+
 
 
 }

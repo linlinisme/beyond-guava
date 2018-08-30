@@ -26,6 +26,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static com.google.common.BitUtil.findNextPositivePowerOfTwo;
+import static com.google.common.collect.CollectionUtil.checkElementNotNull;
 import static com.google.common.collect.CollectionUtil.validateLoadFactor;
 
 /**
@@ -39,7 +40,7 @@ public class IntHashSet extends AbstractSet<Integer> implements Serializable
      */
     public static final int DEFAULT_INITIAL_CAPACITY = 8;
 
-    static final int MISSING_VALUE = -1;
+    static final int MISSING_VALUE = 0;
 
     private final boolean shouldAvoidAllocation;
     private boolean containsMissingValue;
@@ -105,7 +106,10 @@ public class IntHashSet extends AbstractSet<Integer> implements Serializable
         final int capacity = findNextPositivePowerOfTwo(Math.max(DEFAULT_INITIAL_CAPACITY, proposedCapacity));
         resizeThreshold = (int)(capacity * loadFactor); //
         values = new int[capacity];
-        Arrays.fill(values, MISSING_VALUE);
+        if(MISSING_VALUE != 0){
+            Arrays.fill(values,MISSING_VALUE);
+        }
+
     }
 
     /**
@@ -144,6 +148,7 @@ public class IntHashSet extends AbstractSet<Integer> implements Serializable
      */
     public boolean add(final Integer value)
     {
+        checkElementNotNull(value);
         return add(value.intValue());
     }
 
@@ -206,7 +211,9 @@ public class IntHashSet extends AbstractSet<Integer> implements Serializable
         resizeThreshold = (int)(newCapacity * loadFactor); //
 
         final int[] tempValues = new int[capacity];
-        Arrays.fill(tempValues, MISSING_VALUE);
+        if(MISSING_VALUE != 0) {
+            Arrays.fill(tempValues, MISSING_VALUE);
+        }
 
         for (final int value : values)
         {
