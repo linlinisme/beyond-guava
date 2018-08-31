@@ -14,7 +14,7 @@
   <version>HEAD-jre-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Guava Maven Parent</name>
-  <url>https://github.com/google/guava</url>
+  <url>https://github.com/linlinisme/beyond-guava</url>
   <properties>
     <!-- Override this with -Dtest.include="**/SomeTest.java" on the CLI -->
     <test.include>%regex[.*.class]</test.include>
@@ -24,9 +24,9 @@
   </properties>
   <issueManagement>
     <system>GitHub Issues</system>
-    <url>https://github.com/google/guava/issues</url>
+    <url>https://github.com/linlinisme/beyond-guava/issues</url>
   </issueManagement>
-  <inceptionYear>2010</inceptionYear>
+  <inceptionYear>2018</inceptionYear>
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
@@ -38,22 +38,19 @@
     <maven>3.0.3</maven>
   </prerequisites>
   <scm>
-    <connection>scm:git:https://github.com/google/guava.git</connection>
-    <developerConnection>scm:git:git@github.com:google/guava.git</developerConnection>
-    <url>https://github.com/google/guava</url>
+    <connection>scm:git@github.com:linlinisme/beyond-guava.git</connection>
+    <developerConnection>scm:git@github.com:linlinisme/beyond-guava.git</developerConnection>
+    <url>https://github.com/linlinisme/beyond-guava</url>
   </scm>
   <developers>
     <developer>
-      <id>kevinb9n</id>
-      <name>Kevin Bourrillion</name>
-      <email>kevinb@google.com</email>
-      <organization>Google</organization>
-      <organizationUrl>http://www.google.com</organizationUrl>
+      <id>lin</id>
+      <name>lianglin</name>
       <roles>
         <role>owner</role>
         <role>developer</role>
       </roles>
-      <timezone>-8</timezone>
+      <timezone>8</timezone>
     </developer>
   </developers>
   <ciManagement>
@@ -205,12 +202,24 @@
       </plugins>
     </pluginManagement>
   </build>
-  <distributionManagement>
+  <!--<distributionManagement>
     <site>
       <id>guava-site</id>
       <name>Guava Documentation Site</name>
       <url>scp://dummy.server/dontinstall/usestaging</url>
     </site>
+  </distributionManagement>-->
+
+  <distributionManagement>
+    <snapshotRepository>
+      <!--- 此处的id需要和setting.xml 配置的service的id一致 -->
+      <id>lin</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <!--<repository>
+      <id>lin</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>-->
   </distributionManagement>
   <dependencyManagement>
     <dependencies>
