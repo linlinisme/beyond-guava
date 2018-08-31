@@ -7,10 +7,10 @@
 
 ```xml
        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>beyond-guava</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+          <groupId>com.github.linlinisme</groupId>
+          <artifactId>beyond-guava</artifactId>
+          <version>1.0.0</version>
+      </dependency>
 ```
 
 
