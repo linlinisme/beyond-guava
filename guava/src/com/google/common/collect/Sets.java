@@ -226,6 +226,23 @@ public final class Sets {
     return new IntHashSet();
   }
 
+
+  /**
+   * Construct a hash set with int[]array
+   * and iterator caching support.
+   */
+  public static  IntHashSet newIntHashSet(int[] array) {
+    return new IntHashSet(array);
+  }
+
+  /**
+   * Construct a hash set with Integer[]array. if the element is null it will be replace by zero
+   * and iterator caching support.
+   */
+  public static  IntHashSet newIntHashSet(Integer[] array) {
+    return new IntHashSet(array);
+  }
+
   /**
    * Creates a <i>mutable</i> {@code HashSet} instance initially containing the given elements.
    *

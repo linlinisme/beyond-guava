@@ -62,6 +62,28 @@ public class IntHashSet extends AbstractSet<Integer> implements Serializable
     }
 
     /**
+     * Construct a hash set with int[]array
+     * and iterator caching support.
+     */
+    public IntHashSet (int[] array){
+         this(array.length);
+         for(int a : array){
+             add(a);
+         }
+    }
+
+    /**
+     * Construct a hash set with Integer[]array. if the element is null it will be replace by zero
+     * and iterator caching support.
+     */
+    public IntHashSet(Integer[] array){
+        this(array.length);
+        for(Integer a : array){
+            add(a == null ? 0 : a.intValue());
+        }
+    }
+
+    /**
      * Construct a hash set with a proposed capacity, {@link Hashing#DEFAULT_LOAD_FACTOR},
      * and iterator caching support.
      *
