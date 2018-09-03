@@ -1,7 +1,7 @@
 ## beyond-guava: 在guava原有基础上提供高性能的原生类型集合，并与java原有集合一样可以支持lambda-stream流操作、collecor收集
 
 
-###maven引入
+### maven引入
 
 ```xml
        <dependency>
