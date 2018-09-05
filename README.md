@@ -1,9 +1,7 @@
-## beyond-guava: 在guava原有基础上提供高性能的原生类型集合。原生类型集合与java原有集合一样可以支持lambda-stream流操作、collecor收集，性能要比java原有集合平均高50%以上
+## beyond-guava: 在guava原有基础上提供高性能的原生类型集合，并与java原有集合一样可以支持lambda-stream流操作、collecor收集
 
 
-
-## Adding Beyond-Guava to your build
-
+### maven引入
 
 ```xml
        <dependency>
@@ -13,18 +11,14 @@
       </dependency>
 ```
 
+## 性能对比
+原生类型性能上天生比包装类型更有优势。包装类型在java内存中是以对象的形式存在，java对象的构成包括对象头、数据部分、对齐填充三部分，所以包装类型更占内存空间，在进行运算时则需要频繁的拆箱、装箱,并且获取真正数值时因集合中保存的是对象引用并不是对象本身，所以还需要一次内存寻址。这些在很多场景下其实都是一些无谓的损耗。下面以intHashSet和HashSet为例随机add,remove,contains 数量[5000,100000]个随机整数进行一个性能测试
+### 测试结果 
+![avatar](http://i1.bvimg.com/660662/6ef0418ac51c6ae0.png)
 
-## 性能测试结果 
+从测试结果我们看到数据量越大的时候两者的之间差居是越明显，remove,contains因为刻度比例的关系看上去差距不明显，其实两者的差距也不小。
 
-```xml
-Benchmark                                                Mode  Cnt     Score     Error  Units
-BeyondGuavaBenchmark.beyondGuavaCollectorToListBeanmark  avgt    5    37.124 ±   2.570  us/op
-BeyondGuavaBenchmark.beyondGuavaHashMapBenchmark         avgt    5  1664.142 ± 514.607  us/op
-BeyondGuavaBenchmark.javaCollectorsToListBenchmark       avgt    5    80.586 ±   4.331  us/op
-BeyondGuavaBenchmark.javaToMapBenchmark                  avgt    5  2069.030 ± 136.357  us/op  
-```
-
-##使用例子
+## 使用例子
 
 ```xml
  //原生list操作
